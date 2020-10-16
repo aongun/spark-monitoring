@@ -15,6 +15,20 @@
 
     <profiles>
         <profile>
+            <id>scala-2.12_spark-3.0.0</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <commons.httpclient.version>4.5.4</commons.httpclient.version>
+                <jetty.version>9.4.31.v20200723</jetty.version>
+                <spark.version>3.0.0</spark.version>
+                <scala.version>2.12.10</scala.version>
+                <scala.compat.version>2.12</scala.compat.version>
+                <spark.compat.version>3.0</spark.compat.version>
+            </properties>
+        </profile>
+        <profile>
             <id>scala-2.11_spark-2.4.3</id>
             <properties>
                 <commons.httpclient.version>4.5.12</commons.httpclient.version>
@@ -27,7 +41,7 @@
         <profile>
             <id>scala-2.11_spark-2.4.5</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
             <properties>
                 <commons.httpclient.version>4.5.12</commons.httpclient.version>

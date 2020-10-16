@@ -7,6 +7,7 @@ import org.apache.spark.scheduler.cluster.ExecutorInfo
 import org.apache.spark.storage.{BlockManagerId, BlockUpdatedInfo, RDDBlockId, StorageLevel}
 import org.apache.spark.util.{AccumulatorMetadata, LongAccumulator}
 import org.apache.spark.{SparkConf, Success, TaskState}
+import org.apache.spark.executor.ExecutorMetrics
 import org.json4s.JsonAST.JValue
 import org.mockito.Matchers.any
 import org.mockito.Mockito._
@@ -47,6 +48,7 @@ object LogAnalyticsListenerSuite {
     taskType = "",
     reason = Success,
     createTaskInfo(0, 0),
+    new ExecutorMetrics(),
     null)
 
   val sparkListenerStageSubmitted = SparkListenerStageSubmitted(createStageInfo(0, 0))
@@ -110,7 +112,8 @@ object LogAnalyticsListenerSuite {
       "Classpath Entries" -> Seq(
         "/jar1" -> "System",
         "/jar2" -> "User"
-      )
+      ),
+      "Hadoop Properties" -> Seq.empty
     )
   )
 
@@ -402,6 +405,6 @@ class LogAnalyticsListenerSuite extends ListenerSuite
   test("createSink should be called") {
     this.listener.onJobStart(LogAnalyticsListenerSuite.sparkListenerJobStart)
     Thread.sleep(5000);
-    //doNothing.when(this.listener).sendToSink(any(classOf[Option[JValue]]))
+    doNothing.when(this.listener).sendToSink(any(classOf[Option[JValue]]))
   }
 }

@@ -2,15 +2,35 @@ package org.apache.spark.sql.streaming
 
 import java.util.UUID
 
+import com.codahale.metrics.jvm.CpuTimeClock
 import org.apache.spark.listeners.ListenerSuite
+import org.apache.spark.sql.Row
 import org.apache.spark.sql.streaming.StreamingQueryListener.{QueryProgressEvent, QueryStartedEvent, QueryTerminatedEvent}
 import org.scalatest.BeforeAndAfterEach
 
 import scala.collection.JavaConversions.mapAsJavaMap
 
 object LogAnalyticsStreamingQueryListenerSuite {
-  val queryStartedEvent = new QueryStartedEvent(UUID.randomUUID, UUID.randomUUID, "name")
+  val queryStartedEvent = new QueryStartedEvent(UUID.randomUUID, UUID.randomUUID, "name", new CpuTimeClock().getTime.toString)
   val queryTerminatedEvent = new QueryTerminatedEvent(UUID.randomUUID, UUID.randomUUID, None)
+
+  /**
+    *
+    * val id: UUID,
+    * val runId: UUID,
+    * val name: String,
+    * val timestamp: String,
+    * val batchId: Long,
+    * val batchDuration: Long,
+    * val durationMs: ju.Map[String, JLong],
+    * val eventTime: ju.Map[String, String],
+    * val stateOperators: Array[StateOperatorProgress],
+    * val sources: Array[SourceProgress],
+    * val sink: SinkProgress,
+    *
+    * @JsonDeserialize(contentAs = classOf[GenericRowWithSchema])
+    *                            val observedMetrics: ju.Map[String, Row]) extends Serializable {
+    */
   val queryProgressEvent = new QueryProgressEvent(
     new StreamingQueryProgress(
       UUID.randomUUID,
@@ -18,6 +38,7 @@ object LogAnalyticsStreamingQueryListenerSuite {
       null,
       ListenerSuite.EPOCH_TIME_AS_ISO8601,
       2L,
+      300L,
       mapAsJavaMap(Map("total" -> 0L)),
       mapAsJavaMap(Map.empty[String, String]),
       Array(new StateOperatorProgress(
@@ -32,9 +53,9 @@ object LogAnalyticsStreamingQueryListenerSuite {
           Double.NegativeInfinity
         )
       ),
-      new SinkProgress("sink")
-    )
-  )
+      new SinkProgress("sink"),
+    mapAsJavaMap(Map.empty[String, Row])
+  ))
 }
 
 class LogAnalyticsStreamingQueryListenerSuite extends ListenerSuite

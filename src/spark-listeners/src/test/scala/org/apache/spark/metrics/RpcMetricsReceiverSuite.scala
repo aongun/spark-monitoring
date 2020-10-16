@@ -3,6 +3,7 @@ package org.apache.spark.metrics
 import java.util.concurrent.TimeUnit
 
 import com.codahale.metrics._
+import com.codahale.metrics.jvm.CpuTimeClock
 import org.apache.spark._
 import org.apache.spark.rpc.RpcEndpointRef
 import org.apache.spark.scheduler.TaskSchedulerImpl
@@ -230,7 +231,7 @@ class RpcMetricsReceiverSuite extends SparkFunSuite
       RpcMetricsReceiverSuite.MetricNamespace,
       RpcMetricsReceiverSuite.MeterName,
       value,
-      classOf[Clock.CpuTimeClock]
+      classOf[CpuTimeClock]
     ))
     verify(meter, timeout(RpcMetricsReceiverSuite.DefaultRpcEventLoopTimeout).times(0)).mark(any[Long])
   }
@@ -291,7 +292,7 @@ class RpcMetricsReceiverSuite extends SparkFunSuite
       value,
       TimeUnit.NANOSECONDS,
       classOf[ExponentiallyDecayingReservoir],
-      classOf[Clock.CpuTimeClock]
+      classOf[CpuTimeClock]
     ))
     verify(timer, timeout(RpcMetricsReceiverSuite.DefaultRpcEventLoopTimeout).times(0)).update(
       any[Long],
